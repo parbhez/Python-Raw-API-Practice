@@ -23,6 +23,8 @@ def process_blog():
             cursor = conn.cursor(dictionary=True)
 
             with db_lock:
+                # db_lock দিয়ে এটা ensure করে যে একবারে কেবল একটাই thread DB থেকে pending blog select করবে
+                #FOR UPDATE → এটাও ensure করে ওই row টা অন্য কেউ update না করতে পারে
                 cursor.execute("SELECT * FROM blogs WHERE status = 'pending' LIMIT 1 FOR UPDATE")
                 row = cursor.fetchone()
 
@@ -43,19 +45,19 @@ def process_blog():
 
         except Exception as e:
             print(f"[{threading.current_thread().name}] Error: {e}")
-
-        time.sleep(10)  # Each thread waits before checking again
+        #  প্রতিটা thread 10 সেকেন্ড পরে আবার check করে নতুন blog আছে কিনা
+        time.sleep(10)  # Each thread waits before checking again 
 
 # Start multiple threads
-def start_threads(num_threads=3):
+def start_threads(num_threads=3): #কতগুলো thread চালানো হবে তা নির্ধারণ করে.
     for i in range(num_threads):
         t = threading.Thread(target=process_blog, name=f"Worker-{i+1}")
-        t.daemon = True  # So they stop when main thread exits
-        t.start()
+        t.daemon = True  # So they stop when main thread exits. mane daemon=True: main thread বন্ধ হলে এগুলাও বন্ধ হয়ে যাবে
+        t.start() #প্রতিটা thread তৈরি করে .start() দিয়ে চালিয়ে দেয়
 
-    # Keep main thread alive
+    # Keep main thread alive  main thread যেন বন্ধ না হয়ে যায় তার জন্য infinite loop
     while True:
         time.sleep(60)
 
 if __name__ == "__main__":
-    start_threads(num_threads=3)
+    start_threads(num_threads=3) # স্ক্রিপ্ট রান করলে ৩টা thread চালু হবে যারা একসাথে কাজ করবে

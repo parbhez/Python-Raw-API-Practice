@@ -9,15 +9,39 @@ This project includes:
 
 ## 📁 Project Structure
 
-├── .env # Database connection setup
-├── create_database.py # create Database
-├── create_blogs_table.py # create blogs table
-├── db_config.py # MySQL connection settings
-├── blog_api.py # Blog CRUD API (Raw Python, no framework)
-├── auto_background_worker.py # Background script to process pending blog items
-├── multiple_run_development_server.py # Starts all required scripts together in development server
-├── multiple_run_production_server.py # Starts all required scripts together in production server
-└── README.md # Project documentation
+📁 Project Root/
+│
+├── 📄 .env  
+│   🔹 Environment variables (e.g., DB_HOST, DB_USER, DB_PASS, DB_NAME)
+│
+├── 📄 create_database.py  
+│   🔹 Script to create MySQL database if not exists
+│
+├── 📄 create_blogs_table.py  
+│   🔹 Script to create the `blogs` table inside the database
+│
+├── 📄 db_config.py  
+│   🔹 Centralized MySQL connection configuration using `mysql.connector`
+│
+├── 📄 blog_api.py  
+│   🔹 Blog CRUD API using only raw Python and built-in HTTPServer (no framework)
+│   🔹 Accessible at: [http://localhost:800](http://localhost:800)
+│
+├── 📄 auto_background_worker.py  
+│   🔹 Background worker script that checks for pending blog items and processes them automatically
+│   🔹 No user interaction needed
+│
+├── 📄 multiple_run_development_server.py  
+│   🔹 Starts both `blog_api.py` and `auto_background_worker.py` with auto-reload on file changes
+│   🔸 🚫 Not suitable for production
+│
+├── 📄 multiple_run_production_server.py  
+│   🔹 Starts both `blog_api.py` and `auto_background_worker.py` without reload (production ready)
+│   🔹 Keeps processes alive until terminated
+│
+└── 📄 README.md  
+    🔹 Full project usage guide, setup instructions, and run commands
+
 
 
 

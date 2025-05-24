@@ -58,7 +58,11 @@ class BlogHandler(BaseHTTPRequestHandler):
                 })
             conn.close()
             self._set_headers()
-            self.wfile.write(json.dumps(blogs).encode()) #এটি হচ্ছে output stream — এর মাধ্যমে server থেকে ক্লায়েন্টকে ডেটা পাঠানো হয়।
+            self.wfile.write(json.dumps({
+                "status": True,
+                "message": "Blogs fetched successfully",
+                "data": blogs
+            }).encode()) #এটি হচ্ছে output stream — এর মাধ্যমে server থেকে ক্লায়েন্টকে ডেটা পাঠানো হয়।
 
     def do_POST(self):
         if self.path == '/blogs':
@@ -72,7 +76,17 @@ class BlogHandler(BaseHTTPRequestHandler):
             # ✅ Console এ message print
             print(f"✅ New blog created: {data['title']}")
             self._set_headers(201)
-            self.wfile.write(json.dumps({'message': f'Blog created: {data["title"]}'}).encode())
+            self.wfile.write(json.dumps({
+                "status": True,
+                "message": "Blog created Successfully",
+                "data": {
+                    'title': data['title'],
+                    'slug': data['slug'],
+                    'body': data.get('body'),
+                    'image': data.get('image')
+                },
+                "data2": data
+            }).encode())
 
     def do_PUT(self):
         if self.path.startswith('/blogs/'):

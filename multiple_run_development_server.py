@@ -9,6 +9,7 @@ SCRIPT_FILES = ["blog_api.py", "auto_background_worker.py"]
 
 class ReloadHandler(FileSystemEventHandler):
     def __init__(self):
+        
         self.processes = []
         self.start_all_scripts()
 
